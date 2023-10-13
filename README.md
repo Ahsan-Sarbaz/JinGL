@@ -117,7 +117,7 @@ texture->Bind(0);
 #include "Framebuffer.h"
 ...
 
-Framebuffer framebuffer(1920, 1080);
+Framebuffer framebuffer;
 framebuffer.AddAttachment(Format::RGBA8);
 framebuffer.AddDepthStencil();
 // call once to actually attach the attachments
