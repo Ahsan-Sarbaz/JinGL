@@ -1,8 +1,8 @@
 #include "Framebuffer.h"
 #include "GL.h"
 
-Framebuffer::Framebuffer()
-	:id(0), width(0), height(0), depthStencilAttachment(nullptr)
+Framebuffer::Framebuffer(int width, int height)
+	:id(0), width(width), height(height), depthStencilAttachment(nullptr)
 {
 }
 
