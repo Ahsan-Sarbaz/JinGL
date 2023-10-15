@@ -63,8 +63,8 @@ VertexInput anotherVertexInput(shader_program);
 ...
 
 // creates and compiles the shader from the given source
-Shader vs(ShaderType::Vertex, vertex_source_string);
-Shader fs(ShaderType::Fragment, fragment_source_string);
+auto vs = new Shader(ShaderType::Vertex, vertex_source_string);
+auto fs = new Shader(ShaderType::Fragment, fragment_source_string);
 
 // create with vertex and fragment shaders
 ShaderProgram program(vs, fs);
@@ -98,7 +98,8 @@ program.UniformMat4("u_projection_matrix", projection_matrix);
 ...
 
 // the texture is promised to be loaded not actually loaded
-Texture2D* texture = TextureLoader::Load("sprite_sheet.png");
+bool flip = false;
+Texture2D* texture = TextureLoader::Load("sprite_sheet.png", flip);
 
 // load all promised textures to this point
 // uses threads to load many textures data at once

@@ -6,7 +6,7 @@ ShaderProgram::ShaderProgram()
 	id = glCreateProgram();
 }
 
-ShaderProgram::ShaderProgram(const Shader& vs, const Shader& fs)
+ShaderProgram::ShaderProgram(Shader* vs, Shader* fs)
 {
 	if(id == 0)
 		id = glCreateProgram();
@@ -22,9 +22,22 @@ ShaderProgram::~ShaderProgram()
 	attributes.clear();
 }
 
-void ShaderProgram::AttachShader(const Shader& shader) 
+void ShaderProgram::AttachShader(Shader* shader) 
 {
-	glAttachShader(id, shader.GetId());
+	for (size_t i = 0; i < attachedShaders.size(); ++i)
+	{
+		if (attachedShaders[i]->GetType() == shader->GetType())
+		{
+			glDetachShader(id, attachedShaders[i]->GetId());
+			delete attachedShaders[i];
+			attachedShaders[i] = shader;
+			glAttachShader(id, shader->GetId());
+			return;
+		}
+	}
+
+	attachedShaders.push_back(shader);
+	glAttachShader(id, shader->GetId());
 }
 
 bool ShaderProgram::Link()
@@ -198,6 +211,7 @@ void ShaderProgram::UniformMat4(const char* name, float* value) const
 }
 
 Shader::Shader(ShaderType type, const std::string& source)
+	:type(type)
 {
 	id = glCreateShader(GLenum(type));
 

@@ -4,14 +4,14 @@
 
 TextureLoader* TextureLoader::instance = nullptr;
 
-Texture2D* TextureLoader::Load(const std::string& path)
+Texture2D* TextureLoader::Load(const std::string& path, bool flip)
 {
 	if (instance == nullptr)
 	{
 		instance = new TextureLoader;
 	}
 
-	instance->promises.push_back(path);
+	instance->promises.push_back({ path , flip});
 	instance->textures.push_back(new Texture2D);
 	return instance->textures.back();
 }
@@ -27,10 +27,11 @@ void TextureLoader::LoadPromisedTextures()
 {
 	std::vector<PromisedTexture> promisedTextures;
 
-	stbi_set_flip_vertically_on_load(true);
 	std::for_each(std::execution::par_unseq, promises.begin(), promises.end(),
-		[&](const std::string& path) {
+		[&](std::tuple<std::string, bool>& promise) {
+			const auto& [path, flip] = promise;
 			PromisedTexture p;
+			stbi_set_flip_vertically_on_load(flip);
 			p.data = (unsigned char*)stbi_load(path.c_str(), &p.width, &p.height, &p.channels, 0);
 			promisedTextures.push_back(p);
 		});

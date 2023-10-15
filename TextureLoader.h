@@ -2,6 +2,7 @@
 #include "Texture2D.h"
 #include <string>
 #include <vector>
+#include <tuple>
 
 class TextureLoader
 {
@@ -15,8 +16,9 @@ public:
 	/**
 	* promises the load a texture at another time ( by calling LoadPromisedTextures)
 	* @param path path to the texture file (relative to the .exe)
+	* @param flip flip the texture vertically
 	*/
-	static Texture2D* Load(const std::string& path);
+	static Texture2D* Load(const std::string& path, bool flip = false);
 
 	/**
 	* actually loads all the textures that were promised to this point. the loading is done on multiple threads
@@ -27,7 +29,7 @@ public:
 private:
 	static TextureLoader* instance;
 
-	std::vector<std::string> promises;
+	std::vector<std::tuple<std::string, bool>> promises;
 	std::vector<Texture2D*> textures;
 };
 

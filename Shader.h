@@ -1,7 +1,6 @@
 #pragma once
 #include <vector>
 #include <string>
-#include <glm/glm.hpp>
 
 enum class ShaderUniformType : int {
 	Float = 0x1406,
@@ -93,8 +92,15 @@ public:
 	*/
 	unsigned int GetId() const { return id; }
 
+	/**
+	* gets the type of the shader
+	* @returns type
+	*/
+	ShaderType GetType() const { return type; }
+
 private:
 	unsigned int id;
+	ShaderType type;
 };
 
 class ShaderProgram
@@ -111,7 +117,7 @@ public:
 	* @param vs vertex shader to attach
 	* @param fs fragment shader to attach
 	*/
-	explicit ShaderProgram(const Shader& vs, const Shader& fs);
+	explicit ShaderProgram(Shader* vs, Shader* fs);
 	
 	/**
 	* destroys the underlying OpenGL handle
@@ -132,7 +138,7 @@ public:
 	* attaches shader to the program
 	* @param shader shader to attach
 	*/
-	void AttachShader(const Shader& shader);
+	void AttachShader(Shader* shader);
 
 	/**
 	* gets the active uniforms data from the program. it is called when the program is linked by Link
@@ -162,6 +168,12 @@ public:
 	*/
 	const std::vector<ShaderAttribute>& GetAttributes() const { return attributes; }
 	
+	/**
+	* gets attached shaders
+	* @returns shaders
+	*/
+	const std::vector<Shader*>& GetAttachedShader() const { return attachedShaders; }
+
 	/**
 	* gets the location of the active uniform by name
 	* @param name name of the uniform
@@ -235,5 +247,6 @@ private:
 	unsigned int id{ 0 };
 	std::vector<ShaderUniform> uniforms;
 	std::vector<ShaderAttribute> attributes;
+	std::vector<Shader*> attachedShaders;
 	bool isValid{ false };
 };
