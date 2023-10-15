@@ -117,11 +117,13 @@ texture->Bind(0);
 #include "Framebuffer.h"
 ...
 
-Framebuffer framebuffer;
+int width = 1920;
+int height = 1080;
+Framebuffer framebuffer(width, height);
 framebuffer.AddAttachment(Format::RGBA8);
 framebuffer.AddDepthStencil();
 // call once to actually attach the attachments
-framebuffer.Resize(1920, 1080);
+framebuffer.Resize(width, height);
 
 ...
 
@@ -132,7 +134,7 @@ if(window_resized)
 }
 
 // clear all the attachments with sane values
-fb.ClearAttachments();
+framebuffer.ClearAttachments();
 // bind the frambebuffer and also set the viewport to the size
 // of the framebuffer
 framebuffer.Bind();

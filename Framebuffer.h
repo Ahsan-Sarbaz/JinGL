@@ -8,8 +8,10 @@ public:
 
 	/**
 	* creates the framebuffer (this actually does nothing the framebuffer is actually created at the first call to Resize)
+	* @param width width of the framebuffer
+	* @param height height of the framebuffer
 	*/
-	Framebuffer();
+	Framebuffer(int width, int height);
 
 	/**
 	* destroys the framebuffer and all the associated attachments
