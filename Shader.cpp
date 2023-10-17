@@ -12,7 +12,11 @@ ShaderProgram::ShaderProgram(Shader* vs, Shader* fs)
 		id = glCreateProgram();
 	AttachShader(vs);
 	AttachShader(fs);
-	Link();
+	char* buffer;
+	if (!Link(&buffer, nullptr))
+	{
+		printf("SHADER LINK ERROR: %s", buffer);
+	}
 }
 
 ShaderProgram::~ShaderProgram()
@@ -40,7 +44,7 @@ void ShaderProgram::AttachShader(Shader* shader)
 	glAttachShader(id, shader->GetId());
 }
 
-bool ShaderProgram::Link()
+bool ShaderProgram::Link(char** log, size_t* size)
 {
 	glLinkProgram(id);
 
@@ -48,14 +52,15 @@ bool ShaderProgram::Link()
 	glGetProgramiv(id, GL_LINK_STATUS, &status);
 	if (status != GL_TRUE)
 	{
-		int infoLogLen;
-		glGetProgramiv(id, GL_INFO_LOG_LENGTH, &infoLogLen);
-		auto log = new char[infoLogLen + 1];
-		glGetProgramInfoLog(id, infoLogLen, 0, log);
-		log[infoLogLen] = 0;
-		// TODO : add a proper console for this
-		printf("Program Error : %s\n", log);
-		delete[] log;
+		if (log != nullptr)
+		{
+			int infoLogLen;
+			glGetProgramiv(id, GL_INFO_LOG_LENGTH, &infoLogLen);
+			(*log) = new char[infoLogLen + 1];
+			glGetProgramInfoLog(id, infoLogLen, 0, (*log));
+			(*log)[infoLogLen] = 0;
+			if (size != nullptr) *size = infoLogLen;
+		}
 		isValid = false;
 		return false;
 	}

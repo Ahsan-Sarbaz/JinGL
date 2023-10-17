@@ -74,7 +74,12 @@ ShaderProgram another;
 another.AttachShader(vs);
 another.AttachShader(fs);
 // link all the attached shader into the program
-another.Link();
+char* log;
+size_t logSize;
+if(!another.Link(&log, &logSize))
+{
+    cout << log << endl;
+}
 
 program.bind();
 
