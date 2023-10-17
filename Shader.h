@@ -126,8 +126,10 @@ public:
 
 	/**
 	* links the program with already attached shader. call this after attaching at least one shader
+	* @param log pointer to a buffer where the log is stored in (free with delete[] log after use)
+	* @param size size is the size in bytes of log stored
 	*/
-	bool Link();
+	bool Link(char** log, size_t* size);
 
 	/**
 	* binds the program
