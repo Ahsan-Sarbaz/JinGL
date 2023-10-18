@@ -28,8 +28,8 @@ public:
 
 private:
 	static TextureLoader* instance;
-
-	std::vector<std::tuple<std::string, bool>> promises;
+	int index { 0 };
+	std::vector<std::tuple<std::string, bool, int>> promises;
 	std::vector<Texture2D*> textures;
 };
 
