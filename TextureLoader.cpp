@@ -11,7 +11,7 @@ Texture2D* TextureLoader::Load(const std::string& path, bool flip)
 		instance = new TextureLoader;
 	}
 
-	instance->promises.push_back({ path , flip});
+	instance->promises.push_back({ path , flip, instance->index++});
 	instance->textures.push_back(new Texture2D);
 	return instance->textures.back();
 }
@@ -25,20 +25,21 @@ struct PromisedTexture
 
 void TextureLoader::LoadPromisedTextures()
 {
-	std::vector<PromisedTexture> promisedTextures;
+	auto promisedTextures = new PromisedTexture[promises.size()];
 
 	std::for_each(std::execution::par_unseq, promises.begin(), promises.end(),
-		[&](std::tuple<std::string, bool>& promise) {
-			const auto& [path, flip] = promise;
+		[&](std::tuple<std::string, bool, int>& promise) {
+			const auto& [path, flip, index] = promise;
 			PromisedTexture p;
 			stbi_set_flip_vertically_on_load(flip);
 			p.data = (unsigned char*)stbi_load(path.c_str(), &p.width, &p.height, &p.channels, 0);
-			promisedTextures.push_back(p);
+			promisedTextures[index] = p;
 		});
 
-	int i = 0;
-	for (const auto& p : promisedTextures)
+	for (int i = 0; i < promises.size(); i++)
 	{
+		auto& p = promisedTextures[i];
+
 		Format format = Format::Unknown;
 		switch (p.channels)
 		{
@@ -50,5 +51,8 @@ void TextureLoader::LoadPromisedTextures()
 		textures[i]->FromData(p.width, p.height, format, p.data);
 	}
 
+	delete[] promisedTextures;
+
+	index = 0;
 	promises.clear();
 }
