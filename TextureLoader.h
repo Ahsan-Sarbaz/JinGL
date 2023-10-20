@@ -15,6 +15,8 @@ public:
 
 	/**
 	* promises the load a texture at another time ( by calling LoadPromisedTextures)
+	* if a texture with path and flip is loaded again we just reuse the old texture
+	* keep in mind to free them carefully since two or more textures can be the same
 	* @param path path to the texture file (relative to the .exe)
 	* @param flip flip the texture vertically
 	*/

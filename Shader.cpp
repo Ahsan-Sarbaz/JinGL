@@ -215,6 +215,69 @@ void ShaderProgram::UniformMat4(const char* name, float* value) const
 	}
 }
 
+void ShaderProgram::UniformIntArray(const char* name, int count, int* value) const
+{
+	auto location = GetUniformLocation(name);
+	if (location >= 0)
+	{
+		glProgramUniform1iv(id, location, count, value);
+	}
+}
+
+void ShaderProgram::UniformFloatArray(const char* name, int count, float* value) const
+{
+	auto location = GetUniformLocation(name);
+	if (location >= 0)
+	{
+		glProgramUniform1fv(id, location, count, value);
+	}
+}
+
+void ShaderProgram::UniformVec2Array(const char* name, int count, float* value) const
+{
+	auto location = GetUniformLocation(name);
+	if (location >= 0)
+	{
+		glProgramUniform2fv(id, location, count, value);
+	}
+}
+
+void ShaderProgram::UniformVec3Array(const char* name, int count, float* value) const
+{
+	auto location = GetUniformLocation(name);
+	if (location >= 0)
+	{
+		glProgramUniform3fv(id, location, count, value);
+	}
+}
+
+void ShaderProgram::UniformMat2Array(const char* name, int count, float* value) const
+{
+	auto location = GetUniformLocation(name);
+	if (location >= 0)
+	{
+		glProgramUniformMatrix2fv(id, location, count, false, value);
+	}
+}
+
+void ShaderProgram::UniformMat3Array(const char* name, int count, float* value) const
+{
+	auto location = GetUniformLocation(name);
+	if (location >= 0)
+	{
+		glProgramUniformMatrix3fv(id, location, count, false, value);
+	}
+}
+
+void ShaderProgram::UniformMat4Array(const char* name, int count, float* value) const
+{
+	auto location = GetUniformLocation(name);
+	if (location >= 0)
+	{
+		glProgramUniformMatrix4fv(id, location, count, false, value);
+	}
+}
+
 Shader::Shader(ShaderType type, const std::string& source)
 	:type(type)
 {

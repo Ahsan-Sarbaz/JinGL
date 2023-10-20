@@ -245,6 +245,62 @@ public:
 	*/
 	void UniformMat4(const char* name, float* value) const;
 
+	/**
+	* set the int array uniforms value
+	* @param name name of the uniform
+	* @param count count of values
+	* @param value value of the uniform
+	*/
+	void UniformIntArray(const char* name, int count, int* value) const;
+
+	/**
+	* set the float array uniforms value
+	* @param name name of the uniform
+	* @param count count of values
+	* @param value value of the uniform
+	*/
+	void UniformFloatArray(const char* name, int count, float* value) const;
+
+	/**
+	* set the vec2 array uniforms value
+	* @param name name of the uniform
+	* @param count count of values
+	* @param value value of the uniform
+	*/
+	void UniformVec2Array(const char* name, int count, float* value) const;
+
+	/**
+	* set the vec3 array uniforms value
+	* @param name name of the uniform
+	* @param count count of values
+	* @param value value of the uniform
+	*/
+	void UniformVec3Array(const char* name, int count, float* value) const;
+
+	/**
+	* set the mat2 array uniforms value
+	* @param name name of the uniform
+	* @param count count of values
+	* @param value value of the uniform
+	*/
+	void UniformMat2Array(const char* name, int count, float* value) const;
+	
+	/**
+	* set the mat3 array uniforms value
+	* @param name name of the uniform
+	* @param count count of values
+	* @param value value of the uniform
+	*/
+	void UniformMat3Array(const char* name, int count, float* value) const;
+
+	/**
+	* set the mat4 array uniforms value
+	* @param name name of the uniform
+	* @param count count of values
+	* @param value value of the uniform
+	*/
+	void UniformMat4Array(const char* name, int count, float* value) const;
+
 private:
 	unsigned int id{ 0 };
 	std::vector<ShaderUniform> uniforms;
