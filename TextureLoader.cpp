@@ -94,6 +94,7 @@ void TextureLoader::LoadPromisedTextures()
 			case 4: format = Format::RGBA8; break;
 			}
 			textures[i]->FromData(p.width, p.height, format, p.data);
+			textures[i]->GenerateMipmaps();
 			stbi_image_free(p.data);
 		}
 	}

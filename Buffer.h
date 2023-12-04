@@ -11,6 +11,7 @@ public:
 	*	should also be marked dynamic since its data is uploaded later
 	*/
 	explicit Buffer(size_t size, void* data, bool dynamic);
+	explicit Buffer(size_t size, void* data, bool dynamic, bool cpu_write, bool cpu_read);
 
 	/**
 	* Destroys the buffer and de-allocates all the memory
@@ -31,6 +32,13 @@ public:
 	* @returns id
 	*/
 	unsigned int GetID() const { return id; }
+
+	void* MapRead();
+	void* MapWrite();
+	void* MapReadWrite();
+	void Unmap();
+
+	void BindAsSSBO(int index);
 
 private:
 	unsigned int id;

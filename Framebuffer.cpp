@@ -9,16 +9,16 @@ Framebuffer::Framebuffer(int width, int height)
 Framebuffer::~Framebuffer()
 {
 	glDeleteFramebuffers(1, &id);
-	for (auto attachment : attachments)
-		delete attachment;
+	for (auto &[texture, _ ]: attachments)
+		delete texture;
 	attachments.clear();
 
 	delete depthStencilAttachment;
 }
 
-void Framebuffer::AddAttachment(Format format)
+void Framebuffer::AddAttachment(Format format, bool draw)
 {
-	attachments.push_back(new Texture2D(width, height, format));
+	attachments.push_back({ new Texture2D(width, height, format), draw });
 }
 
 void Framebuffer::AddDepthStencil()
@@ -39,27 +39,44 @@ void Framebuffer::Resize(int width, int height)
 	if (actualResize)
 	{
 	
-		std::vector<Format> attachmentFormats;
+		std::vector<std::tuple<Format, bool>> attachmentFormats;
 
 		auto colorAttachmentsCount = attachments.size();
 
 		for (int i = 0; i < (int)attachments.size(); i++)
 		{
-			attachmentFormats.push_back(attachments[i]->GetFormat());
-			delete attachments[i];
+			auto &[texture, draw] = attachments[i];
+
+			attachmentFormats.push_back({ texture->GetFormat(), draw });
+			delete texture;
 		}
 
 		attachments.clear();
 		for (int i = 0; i < (int)colorAttachmentsCount; i++)
-			AddAttachment(attachmentFormats[i]);
+		{
+			auto& [format, draw] = attachmentFormats[i];
+
+			AddAttachment(format, draw);
+		}
 	}
 	else
 	{
 		glCreateFramebuffers(1, &id);
 	}
 
+	std::vector<GLenum> drawAttachments;
+
 	for (int i = 0; i < (int)attachments.size(); i++)
-		glNamedFramebufferTexture(id, GL_COLOR_ATTACHMENT0 + i, attachments[i]->GetID(), 0);
+	{
+		auto& [texture, draw] = attachments[i];
+		glNamedFramebufferTexture(id, GL_COLOR_ATTACHMENT0 + i, texture->GetID(), 0);
+		if (draw) drawAttachments.push_back(GL_COLOR_ATTACHMENT0 + i);
+	}
+
+	if (!drawAttachments.empty())
+	{
+		glNamedFramebufferDrawBuffers(id, drawAttachments.size(), drawAttachments.data());
+	}
 
 	if (depthStencilAttachment != nullptr)
 	{
@@ -99,4 +116,13 @@ void Framebuffer::ClearAttachments(float color[4], float depth, int stencil)
 {
 	ClearColorAttachments(color);
 	ClearDepthStencilAttachment(depth, stencil);
+}
+
+void Framebuffer::BindColorAttachments()
+{
+	for (int i = 0; i < (int)attachments.size(); i++)
+	{
+		auto& [texture, _] = attachments[i];
+		texture->Bind(i);
+	}
 }

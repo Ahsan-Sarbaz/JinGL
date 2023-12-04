@@ -22,8 +22,9 @@ public:
 	* adds an attachment to the framebuffer
 	* @param format pixel format the attachment is going to use 
 	*	(do not use Depth/Stencil Format here to create depth/stencil attachment use AddDepthStencil instead)
+	* @param draw do you want to draw to this attachment from fragment shader
 	*/
-	void AddAttachment(Format format);
+	void AddAttachment(Format format, bool draw);
 
 	/**
 	* add a depth stencil attachment to the framebuffer there is only one this attachment at any time if you add
@@ -66,7 +67,7 @@ public:
 	* gets handles to attachments of the framebuffer
 	* @returns attachments
 	*/
-	const std::vector<Texture2D*>& GetColorAttachments() const { return attachments; }
+	const std::vector<std::tuple<Texture2D*, bool>>& GetColorAttachments() const { return attachments; }
 
 	/**
 	* gets the attachments of the framebuffer
@@ -100,9 +101,15 @@ public:
 	*/
 	void ClearAttachments(float color[4], float depth, int stencil);
 
+	/**
+	* binds all the color attachments to texture units for use in shaders
+	* the unit texture is attached to is based on its index
+	*/
+	void BindColorAttachments();
+
 private:
 	unsigned int id;
 	int width, height;
-	std::vector<Texture2D*> attachments;
+	std::vector<std::tuple<Texture2D*, bool>> attachments;
 	Texture2D* depthStencilAttachment;
 };
