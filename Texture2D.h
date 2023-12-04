@@ -9,6 +9,7 @@ enum class Format
 	RG8 = 0x822B,
 	RGB8 = 0x8051,
 	RGBA8 = 0x8058,
+	RGBA16F = 0x881A,
 	D24S8 = 0x88F0
 };
 
