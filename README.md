@@ -10,6 +10,20 @@ The essentials are available more to come in future (maybe you might help with t
 
 ## Examples
 
+### Initialization
+```cpp
+#include "GL.h"
+...
+
+// Call this function after you have a valid GL context
+// e.g. using GLFW after the `glfwMakeContextCurrent` call
+
+bool is_ready = InitGL();
+...
+// rest of gl calls
+
+```
+
 ### Buffers
 ``` cpp
 #include "Buffer.h"
