@@ -12,3 +12,4 @@
 #include <glad/gl.h>
 #endif
 
+bool InitGL();
