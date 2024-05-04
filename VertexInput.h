@@ -67,11 +67,26 @@ public:
 	void AddVec4();
 
 	/**
+	* adds a uvec2 input attribute
+	*/
+	void AddUVec2();
+
+	/**
+	* adds a uvec3 input attribute
+	*/
+	void AddUVec3();
+
+	/**
+	* adds a uvec4 input attribute
+	*/
+	void AddUVec4();
+
+	/**
 	* adds an input attribute of size and type
 	* @param size of the input attribute (element count not size in bytes)
 	* @param type of the input attribute
 	*/
-	void AddAttribute(int size, int type);
+	void AddAttribute(int size, int type, int index = -1, int binding = -1);
 
 	/**
 	* sets the vertex buffer to be used in the vertex stream for the shaders

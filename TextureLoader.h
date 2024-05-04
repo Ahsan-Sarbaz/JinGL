@@ -19,8 +19,9 @@ public:
 	* keep in mind to free them carefully since two or more textures can be the same
 	* @param path path to the texture file (relative to the .exe)
 	* @param flip flip the texture vertically
+	* @param bindless if you want to use texture in bindless mode
 	*/
-	static Texture2D* Load(const std::string& path, bool flip = false);
+	static Texture2D* Load(const std::string& path, bool flip = false, bool bindless = false);
 
 	/**
 	* actually loads all the textures that were promised to this point. the loading is done on multiple threads
@@ -31,7 +32,8 @@ public:
 private:
 	static TextureLoader* instance;
 	int index { 0 };
-	std::vector<std::tuple<std::string, bool, int>> promises;
+	// (path, flip, bindless, index)
+	std::vector<std::tuple<std::string, bool, bool, int>> promises;
 	std::vector<Texture2D*> textures;
 };
 

@@ -152,6 +152,15 @@ void ShaderProgram::UniformInt(const char* name, int value) const
 	}
 }
 
+void ShaderProgram::UniformInt64(const char* name, uint64_t value) const
+{
+	auto location = GetUniformLocation(name);
+	if (location >= 0)
+	{
+		glProgramUniformHandleui64ARB(id, location, value);
+	}
+}
+
 void ShaderProgram::UniformFloat(const char* name, float value) const
 {
 	auto location = GetUniformLocation(name);
@@ -167,6 +176,15 @@ void ShaderProgram::UniformVec2(const char* name, float* value) const
 	if (location >= 0)
 	{
 		glProgramUniform2fv(id, location, 1, value);
+	}
+}
+
+void ShaderProgram::UniformUVec2(const char* name, unsigned int* value) const
+{
+	auto location = GetUniformLocation(name);
+	if (location >= 0)
+	{
+		glProgramUniform2uiv(id, location, 1, (unsigned int*)value);
 	}
 }
 

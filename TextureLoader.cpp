@@ -4,7 +4,7 @@
 
 TextureLoader* TextureLoader::instance = nullptr;
 
-Texture2D* TextureLoader::Load(const std::string& path, bool flip)
+Texture2D* TextureLoader::Load(const std::string& path, bool flip, bool bindless)
 {
 	if (instance == nullptr)
 	{
@@ -13,15 +13,15 @@ Texture2D* TextureLoader::Load(const std::string& path, bool flip)
 
 	for (const auto& p : instance->promises)
 	{
-		const auto& [_path, _flip, _index] = p;
-		if (path == _path && flip == _flip)
+		const auto& [_path, _flip, _bindless, _index] = p;
+		if (path == _path && flip == _flip && bindless == _bindless)
 		{
 			printf("Re-Using Texture %s\n", path.c_str());
 			return instance->textures[_index];
 		}
 	}
 
-	instance->promises.push_back({ path , flip, instance->index++});
+	instance->promises.push_back({ path , flip, bindless, instance->index++});
 	instance->textures.push_back(new Texture2D);
 	return instance->textures.back();
 }
@@ -32,6 +32,7 @@ struct PromisedTexture
 	unsigned char* data;
 	int data_size;
 	int width, height, channels;
+	bool bindless;
 };
 
 void TextureLoader::LoadPromisedTextures()
@@ -49,7 +50,7 @@ void TextureLoader::LoadPromisedTextures()
 
 	for (size_t i = 0; i < promises.size(); i++)
 	{
-		const auto& [path, flip, index] = promises[i];
+		const auto& [path, flip, bindless, index] = promises[i];
 
 		FILE* file;
 		fopen_s(&file, path.c_str(), "rb");
@@ -62,13 +63,18 @@ void TextureLoader::LoadPromisedTextures()
 				fread_s(buffer, size, 1, size, file);
 				promisedTextures[i].data = buffer;
 				promisedTextures[i].data_size = int(size);
+				promisedTextures[i].bindless = bindless;
 			}
+		}
+		else
+		{
+			printf("Failed to load texture %s\n", path.c_str());
 		}
 	}
 
 	std::for_each(std::execution::par_unseq, promises.begin(), promises.end(),
-		[&](std::tuple<std::string, bool, int>& promise) {
-			const auto& [path, flip, index] = promise;
+		[&](std::tuple<std::string, bool, bool, int>& promise) {
+			const auto& [path, flip, bindless, index] = promise;
 			auto& p = promisedTextures[index];
 			if (p.data != nullptr)
 			{
@@ -93,7 +99,7 @@ void TextureLoader::LoadPromisedTextures()
 			case 3: format = Format::RGB8; break;
 			case 4: format = Format::RGBA8; break;
 			}
-			textures[i]->FromData(p.width, p.height, format, p.data);
+			textures[i]->FromData(p.width, p.height, format, p.data, p.bindless);
 			textures[i]->GenerateMipmaps();
 			stbi_image_free(p.data);
 		}

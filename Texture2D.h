@@ -1,4 +1,5 @@
 #pragma once
+#include <stdint.h>
 
 enum class Format
 {
@@ -25,7 +26,7 @@ public:
 	* @param path path to the file 
 	* @param flip true to flip texture vertically on load else false
 	*/
-	explicit Texture2D(const char* path, bool flip);
+	explicit Texture2D(const char* path, bool flip, bool bindless = false);
 
 	/**
 	* creates a texture from data
@@ -34,7 +35,7 @@ public:
 	* @param format pixel format of the texture
 	* @param data pointer to texture data (if null only the storage is allocated)
 	*/
-	explicit Texture2D(int width, int height, Format format, unsigned char* data = nullptr);
+	explicit Texture2D(int width, int height, Format format, unsigned char* data = nullptr, bool bindless = false);
 
 	/**
 	* deletes the underlying OpenGL handle
@@ -76,6 +77,12 @@ public:
 	*/
 	Format GetFormat() const { return format; }
 
+	void MakeTextureResident();
+
+	void MakeTextureNonResident();
+
+	uint64_t GetHandle() const { return handle; }
+
 private:
 	/**
 	* creates a texture from data
@@ -84,9 +91,10 @@ private:
 	* @param format pixel format of the texture
 	* @param data pointer to texture data (if null only the storage is allocated)
 	*/
-	void FromData(int width, int height, Format format, unsigned char* data);
+	void FromData(int width, int height, Format format, unsigned char* data, bool bindless = false);
 
 	unsigned int id;
+	uint64_t handle;
 	int width, height;
 	Format format;
 };

@@ -109,12 +109,35 @@ void VertexInput::AddVec4()
 	AddAttribute(4, GL_FLOAT);
 }
 
-void VertexInput::AddAttribute(int size, int type)
+void VertexInput::AddUVec2()
 {
+	AddAttribute(2, GL_UNSIGNED_INT);
+}
+
+void VertexInput::AddUVec3()
+{
+	AddAttribute(3, GL_UNSIGNED_INT);
+}
+
+void VertexInput::AddUVec4()
+{
+	AddAttribute(4, GL_UNSIGNED_INT);
+}
+
+
+void VertexInput::AddAttribute(int size, int type, int index, int binding)
+{
+	if (index == -1) index = this->index;
+	if (binding == -1) binding = this->binding;
+
 	glVertexArrayAttribBinding(id, index, binding);
 	if (type == GL_DOUBLE)
 	{
 		glVertexArrayAttribLFormat(id, index, size, type, offset);
+	}
+	else if (type == GL_BYTE || type == GL_UNSIGNED_BYTE || type == GL_SHORT || type == GL_UNSIGNED_SHORT || type == GL_INT || type == GL_UNSIGNED_INT)
+	{
+		glVertexArrayAttribIFormat(id, index, size, type, offset);
 	}
 	else
 	{
@@ -141,8 +164,7 @@ void VertexInput::AddAttribute(int size, int type)
 	}
 
 	offset += size * element_size;
-	index++;
-
+	this->index++;
 }
 
 void VertexInput::SetVertexBuffer(const Buffer& buffer, int binding, int stride, int offset)

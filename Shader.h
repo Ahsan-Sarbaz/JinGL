@@ -1,4 +1,5 @@
 #pragma once
+#include <stdint.h>
 #include <vector>
 #include <string>
 
@@ -197,6 +198,13 @@ public:
 	void UniformInt(const char* name, int value) const;
 	
 	/**
+	* set the int64 uniforms value
+	* @param name name of the uniform
+	* @param value value of the uniform
+	*/
+	void UniformInt64(const char* name, uint64_t value) const;
+
+	/**
 	* set the float uniforms value
 	* @param name name of the uniform
 	* @param value value of the uniform
@@ -209,6 +217,8 @@ public:
 	* @param value value of the uniform
 	*/
 	void UniformVec2(const char* name, float* value) const;
+
+	void UniformUVec2(const char* name, unsigned int* value) const;
 
 	/**
 	* set the vec3 uniforms value

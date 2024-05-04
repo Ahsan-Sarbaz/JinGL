@@ -4,11 +4,11 @@
 #include "GL.h"
 
 Texture2D::Texture2D()
-	:id(0), width(0), height(0), format(Format::Unknown)
+	:id(0), handle(0), width(0), height(0), format(Format::Unknown)
 { }
 
-Texture2D::Texture2D(const char* path, bool flip)
-	:id(0), format(Format::Unknown)
+Texture2D::Texture2D(const char* path, bool flip, bool bindless)
+	:id(0), handle(0), width(0), height(0), format(Format::Unknown)
 {
 	stbi_set_flip_vertically_on_load(flip);
 	int channels = 0;
@@ -24,17 +24,21 @@ Texture2D::Texture2D(const char* path, bool flip)
 	case 4: format = Format::RGBA8; break;
 	}
 
-	FromData(width, height, format, data);
+	FromData(width, height, format, data, bindless);
 	stbi_image_free(data);
 }
 
-Texture2D::Texture2D(int width, int height, Format format, unsigned char* data)
+Texture2D::Texture2D(int width, int height, Format format, unsigned char* data, bool bindless)
 {
-	FromData(width, height, format, data);
+	FromData(width, height, format, data, bindless);
 }
 
 Texture2D::~Texture2D()
 {
+	// TODO: is this needed?
+	if (handle != 0)
+		MakeTextureNonResident();
+
 	glDeleteTextures(1, &id);
 }
 
@@ -48,7 +52,19 @@ void Texture2D::Bind(int unit)
 	glBindTextureUnit(unit, id);
 }
 
-void Texture2D::FromData(int width, int height, Format format, unsigned char* data)
+void Texture2D::MakeTextureResident()
+{
+	handle = glGetTextureHandleARB(id);
+	glMakeTextureHandleResidentARB(handle);
+}
+
+void Texture2D::MakeTextureNonResident()
+{
+	glMakeTextureHandleNonResidentARB(handle);
+	handle = 0;
+}
+
+void Texture2D::FromData(int width, int height, Format format, unsigned char* data, bool bindless)
 {
 	this->width = width;
 	this->height = height;
@@ -77,6 +93,10 @@ void Texture2D::FromData(int width, int height, Format format, unsigned char* da
 		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
 		glTextureParameterf(id, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
 	}
+	
+	// TODO: if the data is null do we need to make it resident? is that OK?
+	if (bindless)
+		MakeTextureResident();
 
 }
 
