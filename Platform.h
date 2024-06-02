@@ -15,10 +15,16 @@ public:
 	Window(int width, int height, const char* title);
 	~Window();
 
+
 	/**
-	* Updates the window i.e poll events and swap buffers
+	* Starts a new frame
 	*/
-	void Update();
+	void StartFrame();
+
+	/**
+	* Ends a frame
+	*/
+	void EndFrame();
 
 	/**
 	* Closes the window
@@ -48,6 +54,48 @@ public:
 	*/
 	bool IsMouseButtonPressed(int button);
 
+	/**
+	* Get the delta time
+	* 
+	* @return delta time
+	*/
+	float GetDeltaTime() const;
+
+	/**
+	* Get the time
+	* 
+	* @return time
+	*/
+	float GetTime() const;
+
+	/**
+	* Get the width
+	* 
+	* @return width
+	*/
+	inline int GetWidth() const { return width; }
+
+	/**
+	* Get the height
+	* 
+	* @return height
+	*/
+	inline int GetHeight() const { return height; }
+
+	/**
+	* Get the title
+	* 
+	* @return title
+	*/
+	inline const char* GetTitle() const { return title; }
+
 private:
 	GLFWwindow* window;
+	float deltaTime = 0.0f;
+	float thisFrameTime = 0.0f;
+	float lastFrameTime = 0.0f;
+	float time = 0.0f;
+	int width;
+	int height;
+	const char* title;
 };

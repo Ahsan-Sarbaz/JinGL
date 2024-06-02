@@ -9,3 +9,5 @@
 #include "TextureLoader.h"
 #include "VertexInput.h"
 #include "Platform.h"
+#include "Batcher.h"
+#include "Colors.h"
