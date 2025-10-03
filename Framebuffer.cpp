@@ -75,7 +75,7 @@ void Framebuffer::Resize(int width, int height)
 
 	if (!drawAttachments.empty())
 	{
-		glNamedFramebufferDrawBuffers(id, drawAttachments.size(), drawAttachments.data());
+		glNamedFramebufferDrawBuffers(id, (GLsizei)drawAttachments.size(), drawAttachments.data());
 	}
 
 	if (depthStencilAttachment != nullptr)

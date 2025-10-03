@@ -103,6 +103,13 @@ public:
 	*/
 	inline const char* GetTitle() const { return title; }
 
+	/**
+	* Get the GLFW window handle
+	* 
+	* @return handle
+	*/
+	inline GLFWwindow* GetHandle() const { return window; }
+
 private:
 	GLFWwindow* window;
 	double deltaTime = 0.0f;

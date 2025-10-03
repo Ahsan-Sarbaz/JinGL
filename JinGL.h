@@ -11,3 +11,4 @@
 #include "Platform.h"
 #include "Batcher.h"
 #include "Colors.h"
+#include "GUI.h"
