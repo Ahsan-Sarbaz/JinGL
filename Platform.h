@@ -13,7 +13,7 @@ public:
 	* @param height height of the window
 	* @param title title of the window
 	*/
-	Window(int32_t width, int32_t height, const char* title);
+	Window(int32_t width, int32_t height, const char* title, bool full_screen = false);
 	~Window();
 
 	/**
