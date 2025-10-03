@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdint.h>
 #include <GLFW/glfw3.h>
 
 class Window
@@ -12,9 +13,8 @@ public:
 	* @param height height of the window
 	* @param title title of the window
 	*/
-	Window(int width, int height, const char* title);
+	Window(int32_t width, int32_t height, const char* title);
 	~Window();
-
 
 	/**
 	* Starts a new frame
@@ -36,7 +36,21 @@ public:
 	* 
 	* @return true if the window is closed
 	*/
-	bool IsClosed();
+	inline bool IsClosed() const { return glfwWindowShouldClose(window); }
+
+	/**
+	* Check if window is open
+	* 
+	* @return true if the window is open
+	*/
+	inline bool IsOpen() const { return !glfwWindowShouldClose(window); }
+
+	/**
+	* Check if the window is focused
+	* 
+	* @return true if the window is focused
+	*/
+	inline bool IsFocused() const { return glfwGetWindowAttrib(window, GLFW_FOCUSED); }
 
 	/**
 	* Check if the key is pressed
@@ -44,7 +58,7 @@ public:
 	* @param key key to check
 	* @return true if the key is pressed
 	*/
-	bool IsKeyPressed(int key);
+	inline bool IsKeyPressed(int key) const { return glfwGetKey(window, key) == GLFW_PRESS; }
 
 	/**
 	* Check if the mouse button is pressed
@@ -52,35 +66,35 @@ public:
 	* @param button button to check
 	* @return true if the mouse button is pressed
 	*/
-	bool IsMouseButtonPressed(int button);
+	inline bool IsMouseButtonPressed(int button) const { return glfwGetMouseButton(window, button) == GLFW_PRESS; }
 
 	/**
 	* Get the delta time
 	* 
 	* @return delta time
 	*/
-	float GetDeltaTime() const;
+	inline double GetDeltaTime() const { return deltaTime;}
 
 	/**
 	* Get the time
 	* 
 	* @return time
 	*/
-	float GetTime() const;
+	inline double GetTime() const { return time; }
 
 	/**
 	* Get the width
 	* 
 	* @return width
 	*/
-	inline int GetWidth() const { return width; }
+	inline int32_t GetWidth() const { return width; }
 
 	/**
 	* Get the height
 	* 
 	* @return height
 	*/
-	inline int GetHeight() const { return height; }
+	inline int32_t GetHeight() const { return height; }
 
 	/**
 	* Get the title
@@ -91,11 +105,11 @@ public:
 
 private:
 	GLFWwindow* window;
-	float deltaTime = 0.0f;
-	float thisFrameTime = 0.0f;
-	float lastFrameTime = 0.0f;
-	float time = 0.0f;
-	int width;
-	int height;
-	const char* title;
+	double deltaTime = 0.0f;
+	double thisFrameTime = 0.0f;
+	double lastFrameTime = 0.0f;
+	double time = 0.0f;
+	int32_t width;
+	int32_t height;
+	char* title;
 };

@@ -6,7 +6,6 @@ The essentials are available more to come in future (maybe you might help with t
 
 ## Dependencies
 - Any OpenGL Loader (e.g GLEW, GLAD, GL3W)
-- stb_image.h (and a cpp file with STB_IMAGE_IMPLEMENTATION defined)
 
 ## Examples
 
